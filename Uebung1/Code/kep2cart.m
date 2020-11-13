@@ -1,7 +1,7 @@
-function [PositionT,GeschwindigkeitT] = kep2cart(i,Omega,w,Mt,e,a,GM)
+function [PositionT,GeschwindigkeitT] = kep2cart(i,Omega,w,Mt,e,a)
 % Berechnung die kartesische Koordinaten aus Keplerelemente
 % alle Winkel in rad
-
+GM=3.9865005*10^14;
 E0=Mt;
 Ek=Mt+e.*sin(E0);
 while abs(E0-Ek)>1e-12
