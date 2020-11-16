@@ -18,7 +18,7 @@ idx = find(h>dc(:,1));
 if (dc(max(idx)) ~= h)
     idx = max(idx);
 else
-    error('I did not write this part because it will not happen in this lab and I am lazy')
+    error('Not necessary for this lab')
 end
 
 % According to the Harris-Priester Density Model
