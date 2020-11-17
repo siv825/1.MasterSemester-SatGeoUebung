@@ -35,10 +35,35 @@ hold on;
 title('Umlaufbahn GOCE')
 plot3(Y1(:,1),Y1(:,2),Y1(:,3),'r');
 
-% numerische Integration für GOCE
-function dydt = odefun(t,y,dc,h_GOCE)
+%% Aerobraking
+a_Aero = (120e3+6378137+1000e3+6378137)/2; % meter
+e_Aero = (1000e3-120e3)/(1000e3+120e3); % keine Einheit
+
+
+h_Aero= 1000; % max altitude in km
+
+% r and v are the initial position and velocity
+[r_Aero,v_Aero] = kep2cart(I,Omega,w,M,e_Aero,a_Aero,GM); % meter for r and m/s for v
+r11_Aero = [r_Aero';v_Aero'];
+f1_Aero = drag_force(dc,h_Aero,v_Aero');
+
+
+TC_Aero=2*pi*(sqrt((norm(r11_Aero(1:3)))^3/GM));  % aus dem Bachelor übernommen
+t_1_sec_Aero=[0 10*TC_Aero];                       % aus dem Bachelor übernommen
+[T1_Aero,Y1_Aero]=ode45(@(t,y)odefun(t,y,dc,h_Aero),t_1_sec_Aero, r11_Aero,options);
+figure;
+[x,y,z]=ellipsoid(0,0,0,6378137,6378137,6356752.3142);
+surf(x, y, z);
+axis equal;
+grid on;
+hold on;
+title('Umlaufbahn Aerobraking')
+plot3(Y1_Aero(:,1),Y1_Aero(:,2),Y1_Aero(:,3),'b');
+
+% numerische Integration GOCE
+function dydt = odefun(t,y,dc,h)
 GM=3.9865005e14;
-ft = drag_force(dc,h_GOCE,[y(4);y(5);y(6)]);
+ft = drag_force(dc,h,[y(4);y(5);y(6)]);
 dydt = [y(4);
         y(5);
         y(6);
