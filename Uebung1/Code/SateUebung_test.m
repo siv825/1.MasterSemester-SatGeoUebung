@@ -25,7 +25,14 @@ f1 = drag_force(dc,h_GOCE,v');
 options = odeset('RelTol',1e-15,'AbsTol',1e-15);
 TC=2*pi*(sqrt((norm(r11(1:3)))^3/GM));  % aus dem Bachelor übernommen
 t_1_sec=[0 10*TC];                       % aus dem Bachelor übernommen
-[T1,Y1]=ode113(@(t,y)odefun(t,y,dc,h_GOCE),t_1_sec, r11,options);
+[T1,Y1]=ode45(@(t,y)odefun(t,y,dc,h_GOCE),t_1_sec, r11,options);
+figure;
+[x,y,z]=ellipsoid(0,0,0,6378137,6378137,6356752.3142);
+surf(x, y, z);
+axis equal;
+grid on;
+hold on;
+title('Umlaufbahn GOCE')
 plot3(Y1(:,1),Y1(:,2),Y1(:,3),'r');
 
 % numerische Integration für GOCE
