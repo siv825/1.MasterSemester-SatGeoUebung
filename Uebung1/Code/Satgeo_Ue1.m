@@ -11,7 +11,7 @@ w = deg2rad(273); % radiant
 M = deg2rad(5); % radiant
 GM = 3.9865005*10^14; %m`3/s`2
 
-h_GOCE = 225; % km
+h_GOCE = 225 * 1000; % km
 
 % r and v are the initial position and velocity
 [r,v] = kep2cart(I,Omega,w,M,e,a,GM); % meter for r and m/s for v
