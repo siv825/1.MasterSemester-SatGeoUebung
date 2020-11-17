@@ -1,7 +1,7 @@
 %% Satgeo Ü1
 % Nadine & Ziqing
 
-
+load('rhocoe.mat')
 %% GOCE
 a = 6378137+225e3; % meter
 I = deg2rad(96.6); % radiant
