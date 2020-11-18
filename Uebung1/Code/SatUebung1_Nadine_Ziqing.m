@@ -1,7 +1,11 @@
-%% Satgeo Ü1
+%% Satellitengeodäsie MSc - Übung 1: Atmosphärenreibung
+
 % Nadine Sprügel 3317570
 % Ziqing Yu 3218051
 
+clearvars
+close all
+clc
 load('rhocoe.mat')
 %% GOCE
 a = 6378137+225e3; % meter
@@ -23,8 +27,8 @@ f1 = drag_force(dc,h_GOCE,v');
 
 options = odeset('RelTol',1e-15,'AbsTol',1e-15);
 
-TC=2*pi*sqrt(a^3/GM);  % aus dem Bachelor übernommen einheit:Sekunde
-t_1_sec=[0 8*TC];                       % aus dem Bachelor übernommen
+TC=2*pi*sqrt(a^3/GM);  % Sekunde
+t_1_sec=[0 8*TC];                       
 [T1,Y1]=ode45(@(t,y)odefun(t,y,dc),t_1_sec,r11,options);
 
 
@@ -48,18 +52,21 @@ plot3(Y1e(:,1),Y1e(:,2),Y1e(:,3),'b','LineWidth',2);
 
 %% Aerobraking
 a_Aero = (120e3+6378137+1000e3+6378137)/2; % meter
-% e_Aero = (1000e3-120e3)/(1000e3+120e3); % keine Einheit
-e_Aero = (a_Aero - 120e3 - 6378137)/a_Aero; % keine Einheit
+a_Aero_max = 1000e3+6378137; % meter
+a_Aero_min = (120e3+6378137); % meter
+e_Aero = (a_Aero_max-a_Aero_min)/(a_Aero_max+a_Aero_min); % keine Einheit
 
 % r and v are the initial position and velocity
 [r_Aero,v_Aero] = kep2cart(I,Omega,w,M,e_Aero,a_Aero,GM); % meter for r and m/s for v
 r11_Aero = [r_Aero';v_Aero'];
 
-% 
-TC_Aero=2*pi*sqrt(a_Aero^3/GM);  % aus dem Bachelor übernommen
-t_1_sec_Aero=[0 TC_Aero*10];                       % aus dem Bachelor übernommen
+
+TC_Aero=2*pi*sqrt(a_Aero^3/GM);  % Sekunde
+t_1_sec_Aero=[0 TC_Aero*10];                    
 [T1_Aero,Y1_Aero]=ode45(@(t,y)odefun2(t,y,dc),t_1_sec_Aero,r11_Aero,options);
 
+
+% weil die Erde dreht sich
 Y2e = zeros(length(T1_Aero),3);
 theta_gr=2*pi/(24*3600)*T1_Aero;
 for i=1:length(T1)
@@ -74,4 +81,6 @@ grid on;
 hold on;
 title('Umlaufbahn Aerobraking')
 plot3(Y2e(:,1),Y2e(:,2),Y2e(:,3),'b','LineWidth',1.5);
+
+
 
