@@ -24,7 +24,7 @@ options = odeset('RelTol',1e-15,'AbsTol',1e-15);
 
 TC=2*pi*sqrt(a^3/GM);  % aus dem Bachelor übernommen einheit:Sekunde
 t_1_sec=[0 8*TC];                       % aus dem Bachelor übernommen
-[T1,Y1]=ode45(@odefun,t_1_sec,r12,options);
+[T1,Y1]=ode45(@(t,y)odefun(t,y,dc),t_1_sec,r11,options);
 
 
 % weil die Erde dreht sich
@@ -41,7 +41,7 @@ axis equal;
 grid on;
 hold on;
 title('Umlaufbahn GOCE')
-plot3(Y1e(:,1),Y1e(:,2),Y1e(:,3),'LineWidth',2);
+plot3(Y1e(:,1),Y1e(:,2),Y1e(:,3),'b','LineWidth',2);
 
 
 
@@ -72,5 +72,5 @@ axis equal;
 grid on;
 hold on;
 title('Umlaufbahn Aerobraking')
-plot3(Y2e(:,1),Y2e(:,2),Y2e(:,3),'b');
+plot3(Y2e(:,1),Y2e(:,2),Y2e(:,3),'b','LineWidth',1.5);
 
