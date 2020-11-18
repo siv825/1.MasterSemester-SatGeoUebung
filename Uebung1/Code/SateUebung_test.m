@@ -17,7 +17,7 @@ h_GOCE = 225 * 1000; % km
 [r,v] = kep2cart(I,Omega,w,M,e,a,GM); % meter for r and m/s for v
 r11 = [r';v'];
 f1 = drag_force(dc,h_GOCE,v');
-r12 = [r';v';f1];
+
 
 
 options = odeset('RelTol',1e-15,'AbsTol',1e-15);
