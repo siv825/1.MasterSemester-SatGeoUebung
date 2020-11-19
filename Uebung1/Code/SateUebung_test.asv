@@ -96,7 +96,7 @@ legend('aus Gauss LPE','aus Keplerelemente')
 title('Vergleich von $\dot{a}$ (GOCE)','FontSize',15,'Interpreter','latex')
 
 figure;
-plot(T1,ePunkt)
+plot(ePunkt)
 hold on;
 plot(T1(1:end-1),diff(e_Gk)./tdiff)
 legend('aus Gauss LPE','aus Keplerelemente')
@@ -104,10 +104,10 @@ title('Vergleich von $\dot{e}$ (GOCE)','FontSize',15,'Interpreter','latex')
 
 
 figure;
-plot(T1,omegaPunkt_MPunkt)
+plot(omegaPunkt_MPunkt)
 title('GOCE LPE Gauss: omegaPunkt+MPunkt')
 hold on;
-omegaPunkt_MPunkt_Kepler=diff(w_Gk)./tdiff+diff(M_Gk)./tdiff; % woher kommen die krassen Ausschläge?
+omegaPunkt_MPunkt_Kepler=diff(w_Gk)./tdiff+diff(M_Gk')./tdiff; % woher kommen die krassen Ausschläge?
 plot(T1(1:end-1),omegaPunkt_MPunkt_Kepler)
 legend('aus Gauss LPE','aus Keplerelemente')
 title('Vergleich von $\dot{w}+\dot{M}$ (GOCE)','FontSize',15,'Interpreter','latex')
