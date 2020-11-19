@@ -45,40 +45,54 @@ hold on;
 title('Umlaufbahn GOCE')
 plot3(Y1e(:,1),Y1e(:,2),Y1e(:,3),'b','LineWidth',2);
 
+% Kepler Elemente 
+for i=1:length(Y1)
+    [I_Gk(i),Omega_Gk(i),w_Gk(i),M_Gk(i),e_Gk(i),a_Gk(i)] = cart2kep(Y1(i,1:3)',Y1(i,4:6)',GM);
+    f1_G = drag_force(dc,h_GOCE,[Y1(i,4);Y1(i,5);Y1(i,6)]);
+    f1_GOCE(i,1:3)=f1_G'; %f1_GOCE=[f1, f2, f3]    
+end
 
 % Gauss LPE
-E0=M;
-Ek=M+e.*sin(E0);
-while abs(E0-Ek)>1e-12
-    E0=Ek;
-    Ek=M+e.*sin(E0);
-end
-E=Ek;
-n=sqrt(GM/a^3);
-nu=atan((sqrt(1-e^2)*sin(E))/(cos(E)-e));
 for i=1:length(Y1)
-    f1_G = drag_force(dc,h_GOCE,[Y1(i,4);Y1(i,5);Y1(i,6)]);
-    f1_GOCE(i,1:3)=f1_G'; %f1_GOCE=[f1, f2, f3]
+    E0=M_Gk(i);
+    Ek=M_Gk(i)+e_Gk(i).*sin(E0);
+    while abs(E0-Ek)>1e-12
+        E0=Ek;
+        Ek=M_Gk(i)+e_Gk(i).*sin(E0);
+    end
+    E_Gk(i)=Ek;
+    n(i)=sqrt(GM/a_Gk(i)^3);
+    nu(i)=atan((sqrt(1-e_Gk(i)^2)*sin(E_Gk(i)))/(cos(E_Gk(i))-e_Gk(i)));
 end
 
-aPunkt=2/n.*f1_GOCE(:,1);
-ePunkt=1/(n*a)*2.*cos(nu.*f1_GOCE(:,1));
-u=w+nu;
-OmegaPunkt=1/(n*a*sin(I)).*sin(u.*f1_GOCE(:,2)); % Laut Folien von Omid müssen wir das nicht berechnen, brauche aber OmegaPunkt für die folgenden Formel 
-omegaPunkt_MPunkt=n-cos(I.*OmegaPunkt);
+aPunkt=2./n'.*f1_GOCE(:,1);
+ePunkt=1./(n'.*a').*2.*cos(nu').*f1_GOCE(:,1);
+u=w_Gk'+nu';
+%&OmegaPunkt=1/(n'.*a'.*sin(I_Gk')).*sin(u').*f1_GOCE(:,2); % Laut Folien von Omid müssen wir das nicht berechnen, brauche aber OmegaPunkt für die folgenden Formel 
+OmegaPunkt=0;
+omegaPunkt_MPunkt=n'-cos(I_Gk').*OmegaPunkt;
+
+
+tdiff=diff(T1(1:2));
 
 figure;
-plot(aPunkt)
+plot(T1,aPunkt)
+hold on;
+plot(T1(1:end-1),diff(a_Gk)./tdiff)
 title('GOCE LPE Gauss: aPunkt')
+
 figure;
 plot(ePunkt)
+hold on;
+plot(T1(1:end-1),diff(e_Gk)./tdiff)
 title('GOCE LPE Gauss: ePunkt')
-figure;
-plot(OmegaPunkt)
-title('GOCE LPE Gauss: OmegaPunkt')
+
 figure;
 plot(omegaPunkt_MPunkt)
 title('GOCE LPE Gauss: omegaPunkt+MPunkt')
+hold on;
+omegaPunkt_MPunkt_Kepler=diff(w_Gk)./tdiff+diff(M_Gk)./tdiff; % woher kommen die krassen Ausschläge?
+plot(T1(1:end-1),omegaPunkt_MPunkt_Kepler)
 
 %% Aerobraking
 a_Aero = (120e3+6378137+1000e3+6378137)/2; % meter
@@ -128,9 +142,9 @@ for i=1:length(Y1_Aero)
     f1_Aero(i,1:3)=f1_A'; %f1_Aero=[f1, f2, f3]
 end
 aPunkt_Aero=2/n_Aero.*f1_Aero(:,1);
-ePunkt_Aero=1/(n_Aero*a_Aero)*2.*cos(nu_Aero.*f1_Aero(:,1));
+ePunkt_Aero=1/(n_Aero*a_Aero)*2.*cos(nu_Aero).*f1_Aero(:,1);
 u_Aero=w+nu_Aero;
-OmegaPunkt_Aero=1/(n_Aero*a_Aero*sin(I)).*sin(u_Aero.*f1_Aero(:,2)); % Laut Folien von Omid müssen wir das nicht berechnen, brauche aber OmegaPunkt für die folgenden Formel 
+OmegaPunkt_Aero=1/(n_Aero*a_Aero*sin(I)).*sin(u_Aero).*f1_Aero(:,2); % Laut Folien von Omid müssen wir das nicht berechnen, brauche aber OmegaPunkt für die folgenden Formel 
 omegaPunkt_MPunkt_Aero=n_Aero-cos(I.*OmegaPunkt_Aero);
 
 figure;
