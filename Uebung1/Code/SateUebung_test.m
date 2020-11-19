@@ -184,7 +184,8 @@ u_Aero=w_Ak'+nu_Aero';
 OmegaPunkt=0;
 omegaPunkt_MPunkt_Aero=n_Aero-cos(I_Ak).*OmegaPunkt;
 
-tdiff=diff(T1_Aero(1:2));
+tdiff=diff(T1_Aero);
+tdiff = tdiff';
 
 T1_Aero = T1_Aero / (2*pi/n_Aero(1));
 
@@ -209,7 +210,7 @@ figure;
 plot(T1_Aero,omegaPunkt_MPunkt_Aero)
 hold on;
 omegaPunkt_MPunkt_Kepler_A=diff(w_Ak)./tdiff+diff(M_Ak)./tdiff; % woher kommen die krassen Ausschläge?
-plot(T1_Aero(1:end-1),omegaPunkt_MPunkt_Kepler_A)
+% plot(T1_Aero(1:end-1),omegaPunkt_MPunkt_Kepler_A)
 legend('aus Gauss LPE','aus Keplerelemente')
 title('Vergleich von $\dot{w}+\dot{M}$ (Aerobrake)','FontSize',15,'Interpreter','latex')
 xlabel('Anzahl der Periode')
