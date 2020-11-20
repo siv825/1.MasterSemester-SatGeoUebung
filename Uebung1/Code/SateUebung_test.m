@@ -8,13 +8,14 @@ close all
 clc
 load('rhocoe.mat')
 %% GOCE
+% Anfangswert
 a = 6378137+225e3; % meter
 I = deg2rad(96.6); % radiant
 e = 0; % keine Einheit
 Omega = deg2rad(335);% radiant
 w = deg2rad(273); % radiant
 M = deg2rad(5); % radiant
-GM = 3.9865005*10^14; %m`3/s`2
+GM = 3.9865005*10^14; %m^3/s^2
 
 h_GOCE = 225 * 1000; % km
 
@@ -210,7 +211,7 @@ figure;
 plot(T1_Aero,omegaPunkt_MPunkt_Aero)
 hold on;
 omegaPunkt_MPunkt_Kepler_A=diff(w_Ak)./tdiff+diff(M_Ak)./tdiff; % woher kommen die krassen Ausschläge?
-% plot(T1_Aero(1:end-1),omegaPunkt_MPunkt_Kepler_A)
+plot(T1_Aero(1:end-1),omegaPunkt_MPunkt_Kepler_A)
 legend('aus Gauss LPE','aus Keplerelemente')
 title('Vergleich von $\dot{w}+\dot{M}$ (Aerobrake)','FontSize',15,'Interpreter','latex')
 xlabel('Anzahl der Periode')
